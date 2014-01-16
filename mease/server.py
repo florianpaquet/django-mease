@@ -40,7 +40,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 class WebSocketServer(object):
     def __init__(self, debug, port):
         # Redis client
-        # TODO : Add connexion information
         self.redis_client = RedisClient()
         self.redis_client.connect(host=REDIS_HOST, port=REDIS_PORT)
         self.redis_client.subscribe(REDIS_CHANNELS, callback=self.on_receive)
