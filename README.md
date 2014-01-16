@@ -26,7 +26,7 @@ INSTALLED_APPS = (
 `python manage.py start_websocket_server`
 
 ### Register callbacks
-Create a `mease_registry.py` files to register your callbacks (the file must be located in an installed app):
+Create `mease_registry.py` files to register your callbacks (the file must be located in an installed app):
 
 ```python
 import mease
