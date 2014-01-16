@@ -29,13 +29,13 @@ registry = WebSocketRegistry()
 
 def autodiscover():
     """
-    Autodiscovers apps with `websocket_registry` modules
+    Autodiscovers apps with `mease_registry` modules
     """
     for app in getattr(settings, 'INSTALLED_APPS', []):
         import_module(app)
 
         try:
-            import_module('%s.websocket_registry' % app)
+            import_module('%s.mease_registry' % app)
         except ImportError:
             pass
 
