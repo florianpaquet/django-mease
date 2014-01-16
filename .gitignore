@@ -1,0 +1,5 @@
+/*
+*.pyc
+!/.gitignore
+!/mease/
+!/setup.py
