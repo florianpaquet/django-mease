@@ -7,6 +7,7 @@ def require_permission(perm_func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if not perm_func(*args, **kwargs):
-                raise PermissionError()
+                # TODO : Handle errors
+                print("Not allowed")
         return wrapper
     return decored

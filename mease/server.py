@@ -20,7 +20,7 @@ class RedisClient(Client):
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         # Dispatch to opener functions
-        for func in registry.openers:
+        for func in self.application.registry['openers']:
             func(self, self.application.clients)
 
         # Append client to clients list
@@ -29,7 +29,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         # Dispatch to closer functions
-        for func in registry.closers:
+        for func in self.application.registry['closers']:
             func(self, self.application.clients)
 
         # Remove client from clients list
@@ -38,7 +38,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         # Dispatch to receiver functions
-        for func in registry.receivers:
+        for func in self.application.registry['receivers']:
             func(self, message, self.application.clients)
 
 
@@ -63,6 +63,9 @@ class WebSocketServer(object):
         # Clients list
         self.application.clients = []
 
+        # Registry
+        self.application.registry = registry
+
     def on_receive(self, message):
         """
         Redis pubsub callback
@@ -71,7 +74,7 @@ class WebSocketServer(object):
 
         # Dispatch to sender functions
         if event.decode() == 'message':
-            for func, channels in registry.senders:
+            for func, channels in self.registry['senders']:
                 if channels is None or channel.decode() in channels:
                     func(self.application.clients, channel, message)
 

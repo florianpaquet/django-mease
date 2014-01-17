@@ -9,6 +9,7 @@ from ...server import WebSocketServer
 DEBUG = getattr(settings, 'DEBUG', False)
 
 LOG_INFO, LOG_SUCCESS, LOG_ERROR = 1, 2, 3
+
 LOG_COLORS = {
     LOG_INFO: Fore.YELLOW,
     LOG_SUCCESS: Fore.GREEN,
@@ -59,4 +60,12 @@ class Command(BaseCommand):
         self.log("Starting websocket server on port {port}".format(port=port))
 
         websocket_server = WebSocketServer(debug=options['debug'], port=options['port'])
+
+        # Log registry
+        self.log("Register callback functions...", level=LOG_INFO)
+        self.log("Registered openers : [%s]" % (', '.join(opener.__name__ for opener in websocket_server.application.registry.openers)), level=LOG_SUCCESS)
+        self.log("Registered closers : [%s]" % (', '.join(closer.__name__ for closer in websocket_server.application.registry.closers)), level=LOG_SUCCESS)
+        self.log("Registered receivers : [%s]" % (', '.join(receiver.__name__ for receiver in websocket_server.application.registry.receivers)), level=LOG_SUCCESS)
+        self.log("Registered senders : [%s]" % (', '.join(sender.__name__ for sender, _ in websocket_server.application.registry.senders)), level=LOG_SUCCESS)
+
         websocket_server.run()
