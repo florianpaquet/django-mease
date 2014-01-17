@@ -1,5 +1,6 @@
 /*
 *.pyc
 !/.gitignore
+!/LICENSE
 !/mease/
 !/setup.py

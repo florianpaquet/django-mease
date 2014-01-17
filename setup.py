@@ -22,4 +22,15 @@ setup(
     author_email="contact@florianpaquet.com",
     packages=['mease'],
     install_requires=requires,
-    dependency_links=dependencies)
+    dependency_links=dependencies,
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ])
