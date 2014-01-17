@@ -1,6 +1,8 @@
 django-mease
 ============
 
+Work in progress
+
 Websocket integration made easy for Django using Tornado, Redis PUB/SUB and easy to use callback registry mechanism.
 
 ## Installation
