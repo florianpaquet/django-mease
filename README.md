@@ -35,7 +35,7 @@ import mease
 
 def receive_websocket_message(client, message, clients_list):
     for c in clients_list:
-        c.write_message(json_message)
+        c.write_message(message)
 
 mease.receiver(receive_websocket_message)
 
