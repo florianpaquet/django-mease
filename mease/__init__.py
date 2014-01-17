@@ -1,2 +1,2 @@
-from .registry import autodiscover, sender, receiver
+from .registry import autodiscover, opener, closer, sender, receiver
 from .publisher import publish
