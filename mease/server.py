@@ -19,20 +19,25 @@ class RedisClient(Client):
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        """
-        Appends client to application clients
-        """
+        # Dispatch to opener functions
+        for func in registry.openers:
+            func(self, self.application.clients)
+
+        # Append client to clients list
         if self not in self.application.clients:
             self.application.clients.append(self)
 
     def on_close(self):
-        """
-        Removes client from application clients
-        """
+        # Dispatch to closer functions
+        for func in registry.closers:
+            func(self, self.application.clients)
+
+        # Remove client from clients list
         if self in self.application.clients:
             self.application.clients.remove(self)
 
     def on_message(self, message):
+        # Dispatch to receiver functions
         for func in registry.receivers:
             func(self, message, self.application.clients)
 
@@ -64,6 +69,7 @@ class WebSocketServer(object):
         """
         event, channel, message = message
 
+        # Dispatch to sender functions
         if event.decode() == 'message':
             for func, channels in registry.senders:
                 if channels is None or channel.decode() in channels:

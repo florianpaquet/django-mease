@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils.importlib import import_module
 
-__all__ = ('autodiscover', 'registry', 'receiver', 'sender')
+__all__ = ('autodiscover', 'registry', 'opener', 'closer', 'receiver', 'sender')
 
 
 class MeaseRegistry(object):
@@ -9,8 +9,22 @@ class MeaseRegistry(object):
     Registry for mease callbacks
     """
     def __init__(self):
+        self.openers = []
+        self.closers = []
         self.receivers = []
         self.senders = []
+
+    def opener(self, func):
+        """
+        Registers an opener function
+        """
+        self.openers.append(func)
+
+    def closer(self, func):
+        """
+        Registers a closer function
+        """
+        self.closers.append(func)
 
     def receiver(self, func):
         """
@@ -38,6 +52,14 @@ def autodiscover():
             import_module('%s.mease_registry' % app)
         except ImportError:
             pass
+
+
+def opener(func):
+    return registry.opener(func)
+
+
+def closer(func):
+    return registry.closer(func)
 
 
 def receiver(func):
