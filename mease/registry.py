@@ -4,9 +4,9 @@ from django.utils.importlib import import_module
 __all__ = ('autodiscover', 'registry', 'receiver', 'sender')
 
 
-class WebSocketRegistry(object):
+class MeaseRegistry(object):
     """
-    Registry for websocket callbacks
+    Registry for mease callbacks
     """
     def __init__(self):
         self.receivers = []
@@ -24,7 +24,7 @@ class WebSocketRegistry(object):
         """
         self.senders.append((func, channels))
 
-registry = WebSocketRegistry()
+registry = MeaseRegistry()
 
 
 def autodiscover():
