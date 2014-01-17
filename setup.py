@@ -11,7 +11,7 @@ requires = [
 
 setup(
     name='django-mease',
-    version='0.1.2',
+    version='0.1.3',
     description="Mease: Websocket integration made easy for Django",
     author="Florian PAQUET",
     author_email="contact@florianpaquet.com",
