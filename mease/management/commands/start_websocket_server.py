@@ -38,7 +38,7 @@ class Command(BaseCommand):
             help="Port to listen"),
     )
 
-    def log(self, message, level=LOG_INFO):
+    def _log(self, message, level=LOG_INFO):
         """
         Prints log
         """
@@ -51,21 +51,46 @@ class Command(BaseCommand):
             message=message,
             reset=Fore.RESET))
 
+    def _registry_names(self, registry):
+        """
+        Returns functions names for a registry
+        """
+        return ', '.join(
+            f.__name__ if not isinstance(f, tuple) else f[0].__name__
+            for f in registry)
+
     def handle(self, *args, **options):
         """
         Starts websocket server
         """
         debug, port = options['debug'], options['port']
 
-        self.log("Starting websocket server on port {port}".format(port=port))
+        self._log("Starting websocket server on port {port}".format(port=port))
 
-        websocket_server = WebSocketServer(debug=options['debug'], port=options['port'])
+        websocket_server = WebSocketServer(
+            debug=options['debug'], port=options['port'])
 
         # Log registry
-        self.log("Register callback functions...", level=LOG_INFO)
-        self.log("Registered openers : [%s]" % (', '.join(opener.__name__ for opener in websocket_server.application.registry.openers)), level=LOG_SUCCESS)
-        self.log("Registered closers : [%s]" % (', '.join(closer.__name__ for closer in websocket_server.application.registry.closers)), level=LOG_SUCCESS)
-        self.log("Registered receivers : [%s]" % (', '.join(receiver.__name__ for receiver in websocket_server.application.registry.receivers)), level=LOG_SUCCESS)
-        self.log("Registered senders : [%s]" % (', '.join(sender.__name__ for sender, _ in websocket_server.application.registry.senders)), level=LOG_SUCCESS)
+        self._log("Registering callback functions", level=LOG_INFO)
+
+        self._log(
+            "Openers : [%s]" % self._registry_names(
+                websocket_server.application.registry.openers),
+            level=LOG_SUCCESS)
+
+        self._log(
+            "Closers : [%s]" % self._registry_names(
+                websocket_server.application.registry.closers),
+            level=LOG_SUCCESS)
+
+        self._log(
+            "Receivers : [%s]" % self._registry_names(
+                websocket_server.application.registry.receivers),
+            level=LOG_SUCCESS)
+
+        self._log(
+            "Senders : [%s]" % self._registry_names(
+                websocket_server.application.registry.senders),
+            level=LOG_SUCCESS)
 
         websocket_server.run()
