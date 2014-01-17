@@ -12,7 +12,7 @@ sudo apt-get install redis-server python-dev
 ```
 ### Install django-mease
 ```
-python setup.py install
+pip install django-mease
 ```
 
 ### Add mease to your INSTALLED_APPS

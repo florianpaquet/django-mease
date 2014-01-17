@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import tornado.gen
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-from toredis import Client
+import tornadoredis
 
 from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS
 from .registry import registry, autodiscover
@@ -10,11 +11,6 @@ from .registry import registry, autodiscover
 autodiscover()
 
 __all__ = ('WebSocketServer',)
-
-
-class RedisClient(Client):
-    def on_disconnect(self):
-        self.connect(host=REDIS_HOST, port=REDIS_PORT)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -43,11 +39,13 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class WebSocketServer(object):
+    @tornado.gen.engine
     def __init__(self, debug, port):
         # Redis client
-        self.redis_client = RedisClient()
-        self.redis_client.connect(host=REDIS_HOST, port=REDIS_PORT)
-        self.redis_client.subscribe(REDIS_CHANNELS, callback=self.on_receive)
+        self.redis_client = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT)
+        self.redis_client.connect()
+        tornado.gen.Task(self.redis_client.subscribe, REDIS_CHANNELS)
+        self.redis_client.listen(self.on_receive)
 
         # Tornado loop
         self.ioloop = tornado.ioloop.IOLoop.instance()
