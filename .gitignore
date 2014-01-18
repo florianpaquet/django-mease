@@ -1,6 +1,10 @@
 /*
 *.pyc
-!/.gitignore
-!/LICENSE
-!/mease/
-!/setup.py
+!.gitignore
+!LICENSE
+!README.md
+!mease/
+!setup.py
+!docs/
+docs/_build
+docs/make.bat
