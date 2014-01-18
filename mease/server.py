@@ -55,6 +55,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.application.executor.submit(
                 func, self, message, self.application.clients)
 
+    def send(self, *args, **kwargs):
+        self.write_message(*args, **kwargs)
+
 
 class WebSocketServer(object):
 
