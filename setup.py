@@ -4,7 +4,7 @@ from setuptools import setup
 
 dependencies = []
 requires = [
-    'colorama',
+    'colorlog',
     'tornado',
     'redis',
     'tornado-redis',

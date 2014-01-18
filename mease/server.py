@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 import tornado.gen
 import tornado.ioloop
 import tornado.web
@@ -14,6 +15,7 @@ from .registry import registry, autodiscover
 autodiscover()
 
 __all__ = ('WebSocketServer',)
+LOGGER = logging.getLogger('mease.websocket_server')
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -77,10 +79,20 @@ class WebSocketServer(object):
         # Executor
         self.application.executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
-        # Redis subscriber
+        # Connect to redis
+        LOGGER.info("Connecting to Redis on {host}:{port}".format(
+            host=REDIS_HOST, port=REDIS_PORT))
+
         self.subscriber = RedisSubscriber(
             tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT))
+
+        LOGGER.info("Successfully connected to Redis")
+
+        # Subscribe to channels
         self.subscriber.subscribe(REDIS_CHANNELS, self)
+
+        LOGGER.debug("Subscribed to [{channels}] Redis channels".format(
+            channels=', '.join(REDIS_CHANNELS)))
 
         self.subscriber.application = self.application
         self.subscriber.registry = registry

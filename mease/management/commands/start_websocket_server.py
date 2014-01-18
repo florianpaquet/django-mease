@@ -1,5 +1,4 @@
-from colorama import Fore
-from datetime import datetime
+import logging
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from optparse import make_option
@@ -7,14 +6,7 @@ from optparse import make_option
 from ...server import WebSocketServer
 
 DEBUG = getattr(settings, 'DEBUG', False)
-
-LOG_INFO, LOG_SUCCESS, LOG_ERROR = 1, 2, 3
-
-LOG_COLORS = {
-    LOG_INFO: Fore.YELLOW,
-    LOG_SUCCESS: Fore.GREEN,
-    LOG_ERROR: Fore.RED,
-}
+LOGGER = logging.getLogger('mease.websocket_server')
 
 
 class Command(BaseCommand):
@@ -38,19 +30,6 @@ class Command(BaseCommand):
             help="Port to listen"),
     )
 
-    def _log(self, message, level=LOG_INFO):
-        """
-        Prints log
-        """
-        assert level in LOG_COLORS.keys()
-        log_time = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-
-        self.stdout.write("{time} {color}{message}{reset}".format(
-            color=LOG_COLORS[level],
-            time=log_time,
-            message=message,
-            reset=Fore.RESET))
-
     def _registry_names(self, registry):
         """
         Returns functions names for a registry
@@ -65,32 +44,28 @@ class Command(BaseCommand):
         """
         debug, port = options['debug'], options['port']
 
-        self._log("Starting websocket server on port {port}".format(port=port))
-
         websocket_server = WebSocketServer(
             debug=options['debug'], port=options['port'])
 
         # Log registry
-        self._log("Registering callback functions", level=LOG_INFO)
+        LOGGER.debug("Registered callback functions :")
 
-        self._log(
+        LOGGER.debug(
             "Openers : [%s]" % self._registry_names(
-                websocket_server.application.registry.openers),
-            level=LOG_SUCCESS)
+                websocket_server.application.registry.openers))
 
-        self._log(
+        LOGGER.debug(
             "Closers : [%s]" % self._registry_names(
-                websocket_server.application.registry.closers),
-            level=LOG_SUCCESS)
+                websocket_server.application.registry.closers))
 
-        self._log(
+        LOGGER.debug(
             "Receivers : [%s]" % self._registry_names(
-                websocket_server.application.registry.receivers),
-            level=LOG_SUCCESS)
+                websocket_server.application.registry.receivers))
 
-        self._log(
+        LOGGER.debug(
             "Senders : [%s]" % self._registry_names(
-                websocket_server.application.registry.senders),
-            level=LOG_SUCCESS)
+                websocket_server.application.registry.senders))
 
+        # Start server
+        LOGGER.info("Started websocket server on port {port}".format(port=port))
         websocket_server.run()
