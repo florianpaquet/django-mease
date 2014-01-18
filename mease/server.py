@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import pickle
 import tornado.gen
 import tornado.ioloop
 import tornado.web
@@ -26,17 +27,12 @@ class RedisSubscriber(tornadoredis.pubsub.BaseSubscriber):
         """
         # Call sender callbacks
         if message.kind == 'message':
-            for func, channels, to_json in self.registry.senders:
+            kwargs = pickle.loads(message.body)
+
+            for func, channels in self.registry.senders:
                 if channels is None or message.channel in channels:
-                    message_body = message.body
-
-                    try:
-                        message_body = json.loads(message_body)
-                    except ValueError:
-                        continue
-
                     EXECUTOR.submit(
-                        func, message.channel, message_body, self.application.clients)
+                        func, message.channel, self.application.clients, **kwargs)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):

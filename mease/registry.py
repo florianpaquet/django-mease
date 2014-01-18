@@ -32,11 +32,11 @@ class MeaseRegistry(object):
         """
         self.receivers.append((func, json))
 
-    def sender(self, func, channels=None, json=False):
+    def sender(self, func, channels=None):
         """
         Registers a sender function
         """
-        self.senders.append((func, channels, json))
+        self.senders.append((func, channels))
 
 registry = MeaseRegistry()
 
