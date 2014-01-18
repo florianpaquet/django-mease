@@ -26,10 +26,17 @@ class RedisSubscriber(tornadoredis.pubsub.BaseSubscriber):
         """
         # Call sender callbacks
         if message.kind == 'message':
-            for func, channels in self.registry.senders:
+            for func, channels, to_json in self.registry.senders:
                 if channels is None or message.channel in channels:
+                    message_body = message.body
+
+                    try:
+                        message_body = json.loads(message_body)
+                    except ValueError:
+                        continue
+
                     EXECUTOR.submit(
-                        func, message.channel, message.body, self.application.clients)
+                        func, message.channel, message_body, self.application.clients)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
