@@ -36,7 +36,7 @@ class MeaseRegistry(object):
         """
         Registers a sender function
         """
-        self.senders.append((func, channels or []))
+        self.senders.append((func, channels))
 
 registry = MeaseRegistry()
 

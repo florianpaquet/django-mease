@@ -5,6 +5,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import tornadoredis
+import tornadoredis.pubsub
 from concurrent.futures import ThreadPoolExecutor
 
 from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS, MAX_WORKERS
@@ -17,7 +18,22 @@ __all__ = ('WebSocketServer',)
 EXECUTOR = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
 
+class RedisSubscriber(tornadoredis.pubsub.BaseSubscriber):
+
+    def on_message(self, message):
+        """
+        Redis pubsub callback
+        """
+        # Call sender callbacks
+        if message.kind == 'message':
+            for func, channels in self.registry.senders:
+                if channels is None or message.channel in channels:
+                    EXECUTOR.submit(
+                        func, message.channel, message.body, self.application.clients)
+
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+
     def open(self):
         # Init storage
         self.storage = {}
@@ -53,12 +69,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class WebSocketServer(object):
+
     def __init__(self, debug, port):
-        # Redis client
-        self.redis_client = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT)
-        self.redis_client.connect()
-        self.redis_client.subscribe(REDIS_CHANNELS)
-        self.redis_client.listen(self.on_receive)
 
         # Tornado loop
         self.ioloop = tornado.ioloop.IOLoop.instance()
@@ -77,17 +89,13 @@ class WebSocketServer(object):
         # Registry
         self.application.registry = registry
 
-    def on_receive(self, message):
-        """
-        Redis pubsub callback
-        """
-        event, channel, message = message
+        # Redis subscriber
+        self.subscriber = RedisSubscriber(
+            tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT))
+        self.subscriber.subscribe(REDIS_CHANNELS, self)
 
-        # Call sender callbacks
-        if event.decode() == 'message':
-            for func, channels in self.registry.senders:
-                if channels is None or channel.decode() in channels:
-                    EXECUTOR.submit(func, channel, message, self.application.clients)
+        self.subscriber.application = self.application
+        self.subscriber.registry = registry
 
     def run(self):
         """
