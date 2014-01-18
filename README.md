@@ -39,7 +39,7 @@ def receive_websocket_message(client, message, clients_list):
 
 mease.receiver(receive_websocket_message)
 
-def send_websocket_message(clients_list, channel, message):
+def send_websocket_message(channel, message, clients_list):
     for c in clients_list:
         c.write_message(message)
 
