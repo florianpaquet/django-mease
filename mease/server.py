@@ -7,14 +7,14 @@ import tornado.websocket
 import tornadoredis
 from concurrent.futures import ThreadPoolExecutor
 
-from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS
+from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS, MAX_WORKERS
 from .registry import registry, autodiscover
 
 autodiscover()
 
 __all__ = ('WebSocketServer',)
 
-EXECUTOR = ThreadPoolExecutor(max_workers=5)
+EXECUTOR = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
