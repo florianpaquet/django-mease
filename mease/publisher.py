@@ -7,12 +7,12 @@ __all__ = ('publish',)
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 
 
-def publish(channels_list=None, **kwargs):
+def publish(channels_list=None, *args, **kwargs):
     """
     Publishes a message on channels
     """
     channels_list = channels_list or REDIS_CHANNELS
-    p = pickle.dumps(kwargs)
+    p = pickle.dumps((args, kwargs))
 
     if not isinstance(channels_list, list):
         channels_list = [channels_list]

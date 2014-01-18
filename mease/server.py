@@ -27,12 +27,12 @@ class RedisSubscriber(tornadoredis.pubsub.BaseSubscriber):
         """
         # Call sender callbacks
         if message.kind == 'message':
-            kwargs = pickle.loads(message.body)
+            args, kwargs = pickle.loads(message.body)
 
             for func, channels in self.registry.senders:
                 if channels is None or message.channel in channels:
                     EXECUTOR.submit(
-                        func, message.channel, self.application.clients, **kwargs)
+                        func, message.channel, self.application.clients, *args, **kwargs)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
