@@ -1,7 +1,10 @@
 from django.conf import settings
 
-__all__ = ('REDIS_CHANNELS', 'REDIS_HOST', 'REDIS_PORT', 'MAX_WORKERS')
+__all__ = (
+    'SUBSCRIBER_CLASS_PATH', 'REDIS_CHANNELS', 'REDIS_HOST', 'REDIS_PORT', 'MAX_WORKERS')
 
+SUBSCRIBER_CLASS_PATH = getattr(
+    settings, 'MEASE_SUBSCRIBER_CLASS', 'mease.subscribers.redis.RedisSubscriber')
 
 REDIS_CHANNELS = getattr(settings, 'MEASE_REDIS_CHANNELS', 'websocket')
 REDIS_HOST = getattr(settings, 'MEASE_REDIS_HOST', 'localhost')

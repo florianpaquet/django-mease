@@ -7,9 +7,10 @@ import tornado.web
 import tornado.websocket
 import tornadoredis
 from concurrent.futures import ThreadPoolExecutor
+from django.utils.module_loading import import_by_path
 
-from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS, MAX_WORKERS
-from .subscribers.redis import RedisSubscriber
+from .settings import SUBSCRIBER_CLASS_PATH, REDIS_HOST, REDIS_PORT
+from .settings import REDIS_CHANNELS, MAX_WORKERS
 from .registry import registry, autodiscover
 
 autodiscover()
@@ -80,10 +81,12 @@ class WebSocketServer(object):
         self.application.executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
         # Connect to redis
+        subscriber_class = import_by_path(SUBSCRIBER_CLASS_PATH)
+
         LOGGER.info("Connecting to Redis on {host}:{port}".format(
             host=REDIS_HOST, port=REDIS_PORT))
 
-        self.subscriber = RedisSubscriber(
+        self.subscriber = subscriber_class(
             tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT))
 
         LOGGER.info("Successfully connected to Redis")
