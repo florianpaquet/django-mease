@@ -15,7 +15,7 @@ if sys.version_info[0] == 2:
 
 setup(
     name='django-mease',
-    version='0.1.4',
+    version='0.1.5',
     description="Mease: Websocket integration made easy for Django",
     url="https://github.com/florianpaquet/django-mease",
     author="Florian PAQUET",
