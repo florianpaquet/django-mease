@@ -26,17 +26,17 @@ class MeaseRegistry(object):
         """
         self.closers.append(func)
 
-    def receiver(self, func):
+    def receiver(self, func, json=False):
         """
         Registers a receiver function
         """
-        self.receivers.append(func)
+        self.receivers.append((func, json))
 
-    def sender(self, func, channels):
+    def sender(self, func, channels=None):
         """
         Registers a sender function
         """
-        self.senders.append((func, channels))
+        self.senders.append((func, channels or []))
 
 registry = MeaseRegistry()
 
@@ -54,17 +54,7 @@ def autodiscover():
             pass
 
 
-def opener(func):
-    return registry.opener(func)
-
-
-def closer(func):
-    return registry.closer(func)
-
-
-def receiver(func):
-    return registry.receiver(func)
-
-
-def sender(func, channels=None):
-    return registry.sender(func, channels or [])
+opener = registry.opener
+closer = registry.closer
+receiver = registry.receiver
+sender = registry.sender

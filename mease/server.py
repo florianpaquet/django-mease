@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
 import tornado.gen
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import tornadoredis
+from concurrent.futures import ThreadPoolExecutor
 
 from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS
 from .registry import registry, autodiscover
@@ -12,39 +14,50 @@ autodiscover()
 
 __all__ = ('WebSocketServer',)
 
+EXECUTOR = ThreadPoolExecutor(max_workers=5)
+
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        # Dispatch to opener functions
+        # Init storage
+        self.storage = {}
+
+        # Call openers callbacks
         for func in self.application.registry.openers:
-            func(self, self.application.clients)
+            EXECUTOR.submit(func, self, self.application.clients)
 
         # Append client to clients list
         if self not in self.application.clients:
             self.application.clients.append(self)
 
     def on_close(self):
-        # Dispatch to closer functions
+        # Call closer callbacks
         for func in self.application.registry.closers:
-            func(self, self.application.clients)
+            EXECUTOR.submit(func, self, self.application.clients)
 
         # Remove client from clients list
         if self in self.application.clients:
             self.application.clients.remove(self)
 
     def on_message(self, message):
-        # Dispatch to receiver functions
-        for func in self.application.registry.receivers:
-            func(self, message, self.application.clients)
+        # Call receiver callbacks
+        for func, to_json in self.application.registry.receivers:
+
+            if to_json:
+                try:
+                    message = json.loads(message)
+                except ValueError:
+                    continue
+
+            EXECUTOR.submit(func, self, message, self.application.clients)
 
 
 class WebSocketServer(object):
-    @tornado.gen.engine
     def __init__(self, debug, port):
         # Redis client
         self.redis_client = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT)
         self.redis_client.connect()
-        tornado.gen.Task(self.redis_client.subscribe, REDIS_CHANNELS)
+        self.redis_client.subscribe(REDIS_CHANNELS)
         self.redis_client.listen(self.on_receive)
 
         # Tornado loop
@@ -70,11 +83,11 @@ class WebSocketServer(object):
         """
         event, channel, message = message
 
-        # Dispatch to sender functions
+        # Call sender callbacks
         if event.decode() == 'message':
             for func, channels in self.registry.senders:
                 if channels is None or channel.decode() in channels:
-                    func(self.application.clients, channel, message)
+                    EXECUTOR.submit(func, channel, message, self.application.clients)
 
     def run(self):
         """

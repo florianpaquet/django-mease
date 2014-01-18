@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 from setuptools import setup
 
 dependencies = []
@@ -8,6 +9,9 @@ requires = [
     'redis',
     'tornado-redis',
 ]
+
+if sys.version_info[0] == 2:
+    requires.append('futures')
 
 setup(
     name='django-mease',
