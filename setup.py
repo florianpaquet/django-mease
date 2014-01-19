@@ -29,6 +29,7 @@ setup(
     license='MIT',
     packages=[
         'mease',
+        'mease.subscribers',
         'mease.management',
         'mease.management.commands'
     ],
