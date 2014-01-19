@@ -49,12 +49,14 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
             if to_json:
                 try:
-                    message = json.loads(message)
+                    msg = json.loads(message)
                 except ValueError:
                     continue
+            else:
+                msg = message
 
             self.application.executor.submit(
-                func, self, message, self.application.clients)
+                func, self, msg, self.application.clients)
 
     def send(self, *args, **kwargs):
         self.write_message(*args, **kwargs)
