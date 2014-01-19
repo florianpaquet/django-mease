@@ -5,7 +5,7 @@ import tornado.gen
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-import tornadoredis
+from toredis import Client
 from concurrent.futures import ThreadPoolExecutor
 from django.utils.module_loading import import_by_path
 
@@ -17,6 +17,7 @@ autodiscover()
 
 __all__ = ('WebSocketServer',)
 LOGGER = logging.getLogger('mease.websocket_server')
+SUBSCRIBER_CLASS = import_by_path(SUBSCRIBER_CLASS_PATH)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -59,7 +60,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.write_message(*args, **kwargs)
 
 
-class WebSocketServer(object):
+class WebSocketServer(SUBSCRIBER_CLASS):
 
     def __init__(self, debug, port):
 
@@ -84,24 +85,19 @@ class WebSocketServer(object):
         self.application.executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
         # Connect to redis
-        subscriber_class = import_by_path(SUBSCRIBER_CLASS_PATH)
-
         LOGGER.info("Connecting to Redis on {host}:{port}".format(
             host=REDIS_HOST, port=REDIS_PORT))
 
-        self.subscriber = subscriber_class(
-            tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT))
+        self.redis_client = Client()
+        self.redis_client.connect(host=REDIS_HOST, port=REDIS_PORT)
 
         LOGGER.info("Successfully connected to Redis")
 
         # Subscribe to channels
-        self.subscriber.subscribe(REDIS_CHANNELS, self)
+        self.redis_client.subscribe(REDIS_CHANNELS, callback=self.on_message)
 
         LOGGER.debug("Subscribed to [{channels}] Redis channels".format(
             channels=', '.join(REDIS_CHANNELS)))
-
-        self.subscriber.application = self.application
-        self.subscriber.registry = registry
 
     def run(self):
         """

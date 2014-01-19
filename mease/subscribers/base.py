@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class BaseSubscriber(object):
     """
     Base subscriber that dispatch message to callback functions
@@ -8,7 +9,7 @@ class BaseSubscriber(object):
         """
         Calls callback functions
         """
-        for func, channels in self.registry.senders:
+        for func, channels in self.application.registry.senders:
             if channels is None or channel in channels:
                 self.application.executor.submit(
                     func, channel, self.application.clients, *args, **kwargs)
