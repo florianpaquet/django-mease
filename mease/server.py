@@ -75,6 +75,9 @@ class WebSocketServer(SUBSCRIBER_CLASS):
             (r'/', WebSocketHandler),
         ], debug=self.debug)
 
+        # Init application storage
+        self.application.storage = {}
+
         # Clients list
         self.application.clients = []
 
