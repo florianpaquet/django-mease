@@ -13,7 +13,7 @@ def publish(channels_list=None, *args, **kwargs):
     Publishes a message on channels
     """
     channels_list = channels_list or REDIS_CHANNELS
-    p = pickle.dumps((args, kwargs))
+    p = pickle.dumps((args, kwargs), protocol=2)
 
     if not isinstance(channels_list, list):
         channels_list = [channels_list]
