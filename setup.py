@@ -7,7 +7,7 @@ requires = [
     'colorlog',
     'tornado',
     'redis',
-    'tornado-redis',
+    'toredis',
 ]
 
 if sys.version_info[0] == 2:
