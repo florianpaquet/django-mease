@@ -1,7 +1,21 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.utils.importlib import import_module
 
 __all__ = ('autodiscover', 'registry', 'opener', 'closer', 'receiver', 'sender')
+
+
+def autodiscover():
+    """
+    Autodiscovers apps with `mease_registry` modules
+    """
+    for app in getattr(settings, 'INSTALLED_APPS', []):
+        import_module(app)
+
+        try:
+            import_module('%s.mease_registry' % app)
+        except ImportError:
+            pass
 
 
 class MeaseRegistry(object):
@@ -39,22 +53,3 @@ class MeaseRegistry(object):
         self.senders.append((func, channels))
 
 registry = MeaseRegistry()
-
-
-def autodiscover():
-    """
-    Autodiscovers apps with `mease_registry` modules
-    """
-    for app in getattr(settings, 'INSTALLED_APPS', []):
-        import_module(app)
-
-        try:
-            import_module('%s.mease_registry' % app)
-        except ImportError:
-            pass
-
-
-opener = registry.opener
-closer = registry.closer
-receiver = registry.receiver
-sender = registry.sender

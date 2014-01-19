@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import redis
 import pickle
 from .settings import REDIS_HOST, REDIS_PORT, REDIS_CHANNELS

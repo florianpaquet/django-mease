@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .registry import registry
 
 __all__ = ('opener', 'closer', 'receiver', 'sender')
