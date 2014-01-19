@@ -23,6 +23,9 @@ SUBSCRIBER_CLASS = import_by_path(SUBSCRIBER_CLASS_PATH)
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
+        """
+        Called when a client opens a websocket connection
+        """
         # Init storage
         self.storage = {}
 
@@ -35,6 +38,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.application.clients.append(self)
 
     def on_close(self):
+        """
+        Called when a client closes a websocket connection
+        """
         # Call closer callbacks
         for func in self.application.registry.closers:
             self.application.executor.submit(func, self, self.application.clients)
@@ -44,14 +50,22 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.application.clients.remove(self)
 
     def on_message(self, message):
+        """
+        Called when a client sends a message through websocket
+        """
+        # Parse JSON
+        try:
+            json_message = json.loads(message)
+        except ValueError:
+            json_message = None
+
         # Call receiver callbacks
         for func, to_json in self.application.registry.receivers:
 
             if to_json:
-                try:
-                    msg = json.loads(message)
-                except ValueError:
+                if json_message is None:
                     continue
+                msg = json_message
             else:
                 msg = message
 
