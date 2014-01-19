@@ -4,10 +4,10 @@ from setuptools import setup
 
 dependencies = []
 requires = [
-    'colorlog',
-    'tornado',
-    'redis',
-    'toredis',
+    'colorlog>=2.0.0',
+    'tornado>=3.2',
+    'redis>=2.9.0',
+    'toredis>=0.1.3',
 ]
 
 if sys.version_info[0] == 2:
@@ -20,11 +20,15 @@ setup(
     url="https://github.com/florianpaquet/django-mease",
     author="Florian PAQUET",
     author_email="contact@florianpaquet.com",
+    long_description=open('README.md').read(),
     license='MIT',
     packages=[
         'mease',
         'mease.management',
         'mease.management.commands'
+    ],
+    dependency_links=[
+        'https://github.com/florianpaquet/toredis/tarball/0.1.3#egg=toredis-0.1.3'
     ],
     install_requires=requires,
     classifiers=[
