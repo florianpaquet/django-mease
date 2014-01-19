@@ -1,6 +1,11 @@
 #!/usr/bin/env python
+import os
 import sys
 from setuptools import setup
+
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 dependencies = []
 requires = [
@@ -15,12 +20,12 @@ if sys.version_info[0] == 2:
 
 setup(
     name='django-mease',
-    version='0.1.6',
+    version='0.1.7',
     description="Mease: Websocket integration made easy for Django",
     url="https://github.com/florianpaquet/django-mease",
     author="Florian PAQUET",
     author_email="contact@florianpaquet.com",
-    long_description=open('README.md').read(),
+    long_description=read('README.md'),
     license='MIT',
     packages=[
         'mease',
