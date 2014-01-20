@@ -2,6 +2,7 @@ django-mease
 ============
 
 Work in progress
+See a full working example `here <https://github.com/florianpaquet/django-mease-example>`_
 
 RTD INCOMING SHORTLY
 --------------------
