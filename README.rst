@@ -37,7 +37,7 @@ Usage
 -----
 Start websocket server
 ~~~~~~~~~~~~~~~~~~~~~~
-``python manage.py start_websocket_server``
+``python manage.py run_websocket_server``
 
 Register callbacks
 ~~~~~~~~~~~~~~~~~~
