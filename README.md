@@ -5,6 +5,9 @@ Work in progress
 
 Websocket integration made easy for Django using Tornado, Redis PUB/SUB and easy to use callback registry mechanism.
 
+DOC IS OUTDATED, NEW ONE INCOMING SHORTLY
+=========================================
+
 ## Installation
 ### Dependencies (Debian & Ubuntu)
 ```

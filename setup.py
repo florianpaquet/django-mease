@@ -9,10 +9,7 @@ def read(fname):
 
 dependencies = []
 requires = [
-    'colorlog>=2.0.0',
-    'tornado>=3.2',
-    'redis>=2.9.0',
-    'toredis-mease==0.1.2',
+    'mease',
 ]
 
 if sys.version_info[0] == 2:
@@ -28,10 +25,9 @@ setup(
     long_description=read('README.md'),
     license='MIT',
     packages=[
-        'mease',
-        'mease.subscribers',
-        'mease.management',
-        'mease.management.commands'
+        'djmease',
+        'djmease.management',
+        'djmease.management.commands',
     ],
     install_requires=requires,
     classifiers=[

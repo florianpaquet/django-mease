@@ -3,7 +3,7 @@
 !.gitignore
 !LICENSE
 !README.md
-!mease/
+!djmease/
 !setup.py
 !docs/
 docs/_build
