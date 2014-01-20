@@ -8,16 +8,21 @@ RTD INCOMING SHORTLY
 
 Websocket integration made easy for Django using Tornado, Redis PUB/SUB and easy to use callback registry mechanism.
 
+
 Installation
 ------------
+
 Dependencies (Debian & Ubuntu)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ::
 
     sudo apt-get install redis-server python-dev
 
+
 Install django-mease
 ~~~~~~~~~~~~~~~~~~~~
+
 ::
 
     pip install django-mease
@@ -25,6 +30,7 @@ Install django-mease
 
 Add mease to your INSTALLED_APPS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. code:: python
 
     INSTALLED_APPS = (
@@ -33,14 +39,19 @@ Add mease to your INSTALLED_APPS
     )
 
 
+
 Usage
 -----
+
 Start websocket server
 ~~~~~~~~~~~~~~~~~~~~~~
+
 ``python manage.py run_websocket_server``
+
 
 Register callbacks
 ~~~~~~~~~~~~~~~~~~
+
 Create ``mease_registry.py`` files to register your callbacks (the file must be located in an installed app):
 
 .. code:: python
@@ -78,8 +89,10 @@ Sender functions are called when a message is sent from the server.
 
 A sender function can be registered for a list of routings, otherwise it is registered globally.
 
+
 Publish
 ~~~~~~~
+
 Use ``djmease.publish`` to publish from anywhere in your code :
 
 .. code:: python
