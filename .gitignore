@@ -3,6 +3,7 @@
 !.gitignore
 !LICENSE
 !README.md
+!MANIFEST.in
 !djmease/
 !setup.py
 !docs/
