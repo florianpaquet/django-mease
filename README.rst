@@ -15,9 +15,12 @@ Installation
 Dependencies (Debian & Ubuntu)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+``Mease`` comes with Redis PUB/SUB backend by default. If you want to use it, install these dependencies :
+
 ::
 
     sudo apt-get install redis-server python-dev
+    pip install redis toredis-mease
 
 
 Install django-mease
