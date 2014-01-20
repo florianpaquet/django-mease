@@ -1,10 +1,10 @@
 django-mease
 ============
 
-DOC IS OUTDATED, NEW ONE INCOMING SHORTLY
-=========================================
-
 Work in progress
+
+RTD INCOMING SHORTLY
+--------------------
 
 Websocket integration made easy for Django using Tornado, Redis PUB/SUB and easy to use callback registry mechanism.
 
