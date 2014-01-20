@@ -59,14 +59,14 @@ Create ``mease_registry.py`` files to register your callbacks (the file must be 
 
 .. code:: python
 
-    import djmease
+    from djmease import mease
 
-    @djmease.receiver
+    @mease.receiver
     def receive_websocket_message(client, message, clients_list):
         for c in clients_list:
             c.write_message(message)
 
-    @djmease.sender(routing=['websocket'])
+    @mease.sender(routing=['websocket'])
     def send_websocket_message(channel, message, clients_list):
         for c in clients_list:
             c.write_message(message)
@@ -74,7 +74,7 @@ Create ``mease_registry.py`` files to register your callbacks (the file must be 
 
 Receiver functions are called when a message is sent from the client.
 
-``djmease.receiver`` functions must take 3 parameters:
+``mease.receiver`` functions must take 3 parameters:
 
 1. the client (tornado WebSocketHandler instance)
 2. the message content
@@ -84,7 +84,7 @@ Receiver functions are called when a message is sent from the client.
 
 Sender functions are called when a message is sent from the server.
 
-``djmease.sender`` functions must take 3 parameters:
+``mease.sender`` functions must take 3 parameters:
 
 1. a list of all connected clients (list of tornado WebSocketHandler instances)
 2. the target routing
@@ -96,13 +96,13 @@ A sender function can be registered for a list of routings, otherwise it is regi
 Publish
 ~~~~~~~
 
-Use ``djmease.publish`` to publish from anywhere in your code :
+Use ``mease.publish`` to publish from anywhere in your code :
 
 .. code:: python
 
-    import djmease
+    from djmease import mease
 
-    djmease.publish('websocket', "Hello world !")
+    mease.publish('websocket', "Hello world !")
 
 
 This will call all sender functions registered on the 'websocket' routing.
