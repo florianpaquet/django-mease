@@ -2,7 +2,7 @@
 *.pyc
 !.gitignore
 !LICENSE
-!README.md
+!README.rst
 !MANIFEST.in
 !djmease/
 !setup.py
