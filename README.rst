@@ -1,13 +1,14 @@
 django-mease
 ============
 
-Work in progress. See a full working example `here <https://github.com/florianpaquet/django-mease-example>`_.
-
-RTD INCOMING SHORTLY
---------------------
+Work in progress.
 
 Websocket integration made easy for Django using Tornado, Redis PUB/SUB and easy to use callback registry mechanism.
 
+See a full working example `here <https://github.com/florianpaquet/django-mease-example>`_
+
+RTD INCOMING SHORTLY
+--------------------
 
 Installation
 ------------

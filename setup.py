@@ -7,12 +7,12 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 requires = [
-    'mease==0.1.0',
+    'mease==0.1.1',
 ]
 
 setup(
     name='django-mease',
-    version='0.1.8',
+    version='0.1.9',
     description="django-mease: Websocket integration made easy for Django",
     url="https://github.com/florianpaquet/django-mease",
     author="Florian PAQUET",
@@ -26,7 +26,7 @@ setup(
     ],
     install_requires=requires,
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Web Environment",
         "Framework :: Django",
         "Intended Audience :: Developers",
