@@ -12,14 +12,6 @@ LOGGER = logging.getLogger('mease.websocket_server')
 
 class Command(BaseCommand):
 
-    def _registry_names(self, registry):
-        """
-        Returns functions names for a registry
-        """
-        return ', '.join(
-            f.__name__ if not isinstance(f, tuple) else f[0].__name__
-            for f in registry)
-
     def handle(self, *args, **options):
         """
         Starts websocket server
