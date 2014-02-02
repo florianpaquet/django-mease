@@ -7,5 +7,4 @@
 !djmease/
 !setup.py
 !docs/
-docs/_build
-docs/make.bat
+docs/build

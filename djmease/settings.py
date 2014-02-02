@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 
-BACKEND_CLASS_PATH = getattr(
-    settings, 'MEASE_BACKEND_CLASS', 'mease.backends.redis.RedisBackend')
-BACKEND_CONF = getattr(settings, 'MEASE_BACKEND_CONFIG', {})
+MEASE_SETTINGS = getattr(settings, 'MEASE', {})
 
-WEBSOCKET = getattr(settings, 'MEASE_WEBSOCKET_CONFIG', {})
+# Backend
 
-WEBSOCKET_PORT = WEBSOCKET.get('PORT', 9090)
-WEBSOCKET_AUTORELOAD = WEBSOCKET.get('AUTORELOAD', getattr(settings, 'DEBUG', False))
+BACKEND_CLASS_PATH = MEASE_SETTINGS.get(
+    'BACKEND', 'mease.backends.redis.RedisBackend')
+
+BACKEND_SETTINGS = MEASE_SETTINGS.get('BACKEND_SETTINGS', {})
